@@ -1,0 +1,48 @@
+spring:
+  application:
+    name: theword
+    
+  datasource:
+    # JDBC URL format: jdbc:postgresql://<host>:<port>/<database_name>
+    url: jdbc:postgresql://localhost:5432/theword
+    username: postgres
+    password: P@ssw0rd!
+    driver-class-name: org.postgresql.Driver
+    hikari:
+      jdbc-url: ${spring.datasource.url}
+      username: ${spring.datasource.username}
+      password: ${spring.datasource.password}
+      driver-class-name: ${spring.datasource.driver-class-name}
+
+  jpa:
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+    hibernate:
+      # Options: none, validate, update, create, create-drop
+      ddl-auto: update
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+springdoc:
+  # Path for the JSON OpenAPI specification (Default: /v3/api-docs)
+  api-docs:
+    enabled: true
+    
+  # Path for the Swagger HTML UI (Default: /swagger-ui.html)
+  swagger-ui:
+    path: /swagger-ui.html
+    enabled: true
+    # Persist authorization data (JWT/API Keys) upon page refresh
+    persistAuthorization: true
+    # Sort endpoints alphabetically (can also be 'method')
+    operationsSorter: alpha 
+
+server:
+  address: localhost
+  port: 8080
+  servlet:
+    context-path: /
+logging:
+  level:
+    root: info
+    org.hibernate.orm.connections.pooling: ERROR
