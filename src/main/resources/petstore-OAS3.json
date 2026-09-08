@@ -953,10 +953,12 @@
     "schemas": {
       "User": {
         "type": "object",
+        "x-class-extra-annotation": "@jakarta.persistence.Entity @jakarta.persistence.Table(name = \"app_users\")",
         "properties": {
           "id": {
             "type": "integer",
-            "format": "int64"
+            "format": "int64",
+            "x-field-extra-annotation": "@jakarta.persistence.Id @jakarta.persistence.GeneratedValue(strategy = jakarta.persistence.GenerationType.IDENTITY)"
           },
           "username": {
             "type": "string"
@@ -985,10 +987,12 @@
       },
       "Category": {
         "type": "object",
+        "x-class-extra-annotation": "@jakarta.persistence.Entity @jakarta.persistence.Table(name = \"category\")",
         "properties": {
           "id": {
             "type": "integer",
-            "format": "int64"
+            "format": "int64",
+             "x-field-extra-annotation": "@jakarta.persistence.Id @jakarta.persistence.GeneratedValue(strategy = jakarta.persistence.GenerationType.IDENTITY)"
           },
           "name": {
             "type": "string"
@@ -997,13 +1001,16 @@
       },
       "Pet": {
         "type": "object",
+        "x-class-extra-annotation": "@jakarta.persistence.Entity @jakarta.persistence.Table(name = \"pet\")",
         "properties": {
           "id": {
             "type": "integer",
-            "format": "int64"
+            "format": "int64",
+            "x-field-extra-annotation": "@jakarta.persistence.Id @jakarta.persistence.GeneratedValue(strategy = jakarta.persistence.GenerationType.IDENTITY)"
           },
           "category": {
-            "$ref": "#/components/schemas/Category"
+            "$ref": "#/components/schemas/Category",
+            "x-field-extra-annotation": "@jakarta.persistence.ManyToOne @jakarta.persistence.JoinColumn(name = \"category_id\", nullable = false)"
           },
           "name": {
             "type": "string",
@@ -1017,6 +1024,7 @@
           },
           "tags": {
             "type": "array",
+            "x-field-extra-annotation": "@jakarta.persistence.OneToMany",
             "items": {
               "$ref": "#/components/schemas/Tag"
             }
@@ -1038,10 +1046,12 @@
       },
       "Tag": {
         "type": "object",
+        "x-class-extra-annotation": "@jakarta.persistence.Entity @jakarta.persistence.Table(name = \"tag\")",
         "properties": {
           "id": {
             "type": "integer",
-            "format": "int64"
+            "format": "int64",
+            "x-field-extra-annotation": "@jakarta.persistence.Id @jakarta.persistence.GeneratedValue(strategy = jakarta.persistence.GenerationType.IDENTITY)"
           },
           "name": {
             "type": "string"
@@ -1050,10 +1060,12 @@
       },
       "Order": {
         "type": "object",
+        "x-class-extra-annotation": "@jakarta.persistence.Entity @jakarta.persistence.Table(name = \"orders\")",
         "properties": {
           "id": {
             "type": "integer",
-            "format": "int64"
+            "format": "int64",
+            "x-field-extra-annotation": "@jakarta.persistence.Id @jakarta.persistence.GeneratedValue(strategy = jakarta.persistence.GenerationType.IDENTITY)"
           },
           "petId": {
             "type": "integer",

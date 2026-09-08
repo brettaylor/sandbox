@@ -1,10 +1,15 @@
 spring:
   application:
-    name: theword
-    
+    name: petstore
+  
+  jackson:
+    deserialization:
+      accept-single-value-as-array: true
+
+        
   datasource:
     # JDBC URL format: jdbc:postgresql://<host>:<port>/<database_name>
-    url: jdbc:postgresql://localhost:5432/theword
+    url: jdbc:postgresql://postgres:5432/petstore
     username: postgres
     password: P@ssw0rd!
     driver-class-name: org.postgresql.Driver
@@ -22,7 +27,7 @@ spring:
     show-sql: true
     properties:
       hibernate:
-        format_sql: true
+        '[format_sql]': true
 springdoc:
   # Path for the JSON OpenAPI specification (Default: /v3/api-docs)
   api-docs:
@@ -38,11 +43,11 @@ springdoc:
     operationsSorter: alpha 
 
 server:
-  address: localhost
+  address: petstore
   port: 8080
   servlet:
     context-path: /
 logging:
   level:
     root: info
-    org.hibernate.orm.connections.pooling: ERROR
+    '[org.hibernate.orm.connections.pooling]': ERROR

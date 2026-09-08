@@ -1,1 +1,44 @@
-services: {}
+services: 
+  petstore:
+    image: petstore:latest
+    container_name: petstore
+    hostname: petstore
+    ports:
+      - "8080:8080"  
+    volumes:
+      - ./src/test/resources/application.yml:/workspace/application.yml
+    networks:
+      - local-tier
+      
+  postgres:
+    image: postgres:18
+    hostname: postgres
+    container_name: postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: P@ssw0rd!  # Change this in production!
+      POSTGRES_DB: petstore
+      # Optional: Explicitly define PGDATA if you need strict path targeting
+      # PGDATA: /var/lib/postgresql/data/pgdata
+    ports:
+      - "5432:5432"
+    shm_size: 128mb  # Recommended to avoid shared memory limits during heavy queries
+    volumes:
+      # Mount to the parent directory to accommodate PostgreSQL 18's versioned subdirectories
+      - postgres_data:/var/lib/postgresql
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d petstore"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - local-tier
+
+volumes:
+  postgres_data:
+    driver: local
+
+networks:
+  local-tier:
+    driver: bridge
