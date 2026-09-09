@@ -1,17 +1,17 @@
 spring:
   application:
     name: petstore
-
+  
   jackson:
     deserialization:
       accept-single-value-as-array: true
 
-
+        
   datasource:
     # JDBC URL format: jdbc:postgresql://<host>:<port>/<database_name>
-    url: jdbc:postgresql://localhost:5432/petstore
+    url: jdbc:postgresql://postgres:5432/petstore
     username: postgres
-    password: postgres
+    password: P@ssw0rd!
     driver-class-name: org.postgresql.Driver
     hikari:
       jdbc-url: ${spring.datasource.url}
@@ -32,7 +32,7 @@ springdoc:
   # Path for the JSON OpenAPI specification (Default: /v3/api-docs)
   api-docs:
     enabled: true
-
+    
   # Path for the Swagger HTML UI (Default: /swagger-ui.html)
   swagger-ui:
     path: /swagger-ui.html
@@ -40,10 +40,10 @@ springdoc:
     # Persist authorization data (JWT/API Keys) upon page refresh
     persistAuthorization: true
     # Sort endpoints alphabetically (can also be 'method')
-    operationsSorter: alpha
+    operationsSorter: alpha 
 
 server:
-  address: localhost
+  address: petstore
   port: 8080
   servlet:
     context-path: /

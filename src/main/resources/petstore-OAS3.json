@@ -861,7 +861,6 @@
             }
           }
         },
-        "deprecated": true,
         "security": [
           {
             "petstore_auth": [
@@ -953,12 +952,12 @@
     "schemas": {
       "User": {
         "type": "object",
-        "x-class-extra-annotation": "@jakarta.persistence.Entity @jakarta.persistence.Table(name = \"app_users\")",
+        "x-class-extra-annotation": "@Entity\n  @Table(name = \"app_users\")",
         "properties": {
           "id": {
             "type": "integer",
             "format": "int64",
-            "x-field-extra-annotation": "@jakarta.persistence.Id @jakarta.persistence.GeneratedValue(strategy = jakarta.persistence.GenerationType.IDENTITY)"
+            "x-field-extra-annotation": "@Id\n  @GeneratedValue(strategy = GenerationType.IDENTITY)"
           },
           "username": {
             "type": "string"
@@ -987,12 +986,12 @@
       },
       "Category": {
         "type": "object",
-        "x-class-extra-annotation": "@jakarta.persistence.Entity @jakarta.persistence.Table(name = \"category\")",
+        "x-class-extra-annotation": "@Entity\n  @Table(name = \"category\")",
         "properties": {
           "id": {
             "type": "integer",
             "format": "int64",
-             "x-field-extra-annotation": "@jakarta.persistence.Id @jakarta.persistence.GeneratedValue(strategy = jakarta.persistence.GenerationType.IDENTITY)"
+             "x-field-extra-annotation": "@Id\n  @GeneratedValue(strategy = GenerationType.IDENTITY)"
           },
           "name": {
             "type": "string"
@@ -1001,30 +1000,34 @@
       },
       "Pet": {
         "type": "object",
-        "x-class-extra-annotation": "@jakarta.persistence.Entity @jakarta.persistence.Table(name = \"pet\")",
+        "x-class-extra-annotation": "@Entity\n@Table(name = \"pet\")",
         "properties": {
           "id": {
             "type": "integer",
             "format": "int64",
-            "x-field-extra-annotation": "@jakarta.persistence.Id @jakarta.persistence.GeneratedValue(strategy = jakarta.persistence.GenerationType.IDENTITY)"
+            "x-field-extra-annotation": "@Id\n  @GeneratedValue(strategy = GenerationType.IDENTITY)"
           },
           "category": {
             "$ref": "#/components/schemas/Category",
-            "x-field-extra-annotation": "@jakarta.persistence.ManyToOne @jakarta.persistence.JoinColumn(name = \"category_id\", nullable = false)"
+            "x-field-extra-annotation": "@ManyToOne(fetch = FetchType.LAZY,cascade = CascadeType.ALL, optional = false)\n  @JoinColumn(name = \"category_id\", nullable = false)"
           },
           "name": {
             "type": "string",
-            "example": "doggie"
+            "example": "doggie",
+            "x-field-extra-annotation": "@Column(nullable = false)"
           },
           "photoUrls": {
             "type": "array",
+            "uniqueItems": true,
+            "x-field-extra-annotation": "@ElementCollection\n  @CollectionTable(\n\t\tname = \"pet_photo_urls\",\n\t\tjoinColumns = @JoinColumn(name = \"pet_id\")\n\t\t)\n  @Column(name = \"photo_url\", nullable = false)",
             "items": {
               "type": "string"
             }
           },
           "tags": {
             "type": "array",
-            "x-field-extra-annotation": "@jakarta.persistence.OneToMany",
+            "uniqueItems": true,
+            "x-field-extra-annotation": "@OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)\n  @JoinTable(\n\t\tname = \"pet_tags\",\n\t\tjoinColumns = @JoinColumn(name = \"pet_id\"),\n\t\tinverseJoinColumns = @JoinColumn(name = \"tag_id\")\n\t)",
             "items": {
               "$ref": "#/components/schemas/Tag"
             }
@@ -1032,6 +1035,7 @@
           "status": {
             "type": "string",
             "description": "pet status in the store",
+            "x-field-extra-annotation": "@Enumerated(EnumType.STRING)",
             "enum": [
               "available",
               "pending",
@@ -1046,12 +1050,12 @@
       },
       "Tag": {
         "type": "object",
-        "x-class-extra-annotation": "@jakarta.persistence.Entity @jakarta.persistence.Table(name = \"tag\")",
+        "x-class-extra-annotation": "@Entity\n@Table(name = \"tag\")",
         "properties": {
           "id": {
             "type": "integer",
             "format": "int64",
-            "x-field-extra-annotation": "@jakarta.persistence.Id @jakarta.persistence.GeneratedValue(strategy = jakarta.persistence.GenerationType.IDENTITY)"
+            "x-field-extra-annotation": "@Id\n  @GeneratedValue(strategy = GenerationType.IDENTITY)"
           },
           "name": {
             "type": "string"
@@ -1060,16 +1064,16 @@
       },
       "Order": {
         "type": "object",
-        "x-class-extra-annotation": "@jakarta.persistence.Entity @jakarta.persistence.Table(name = \"orders\")",
+        "x-class-extra-annotation": "@Entity\n@Table(name = \"orders\")",
         "properties": {
           "id": {
             "type": "integer",
             "format": "int64",
-            "x-field-extra-annotation": "@jakarta.persistence.Id @jakarta.persistence.GeneratedValue(strategy = jakarta.persistence.GenerationType.IDENTITY)"
+            "x-field-extra-annotation": "@Id\n  @GeneratedValue(strategy = GenerationType.IDENTITY)"
           },
-          "petId": {
-            "type": "integer",
-            "format": "int64"
+          "pet": {
+            "$ref": "#/components/schemas/Pet",
+            "x-field-extra-annotation": "@ManyToOne(fetch = FetchType.LAZY)\n\t@JoinColumn(name = \"pet_id\")"
           },
           "quantity": {
             "type": "integer",
@@ -1082,6 +1086,7 @@
           "status": {
             "type": "string",
             "description": "Order Status",
+            "x-field-extra-annotation": "@Enumerated(EnumType.STRING)",
             "enum": [
               "placed",
               "approved",

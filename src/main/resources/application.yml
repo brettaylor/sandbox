@@ -18,16 +18,17 @@ spring:
       username: ${spring.datasource.username}
       password: ${spring.datasource.password}
       driver-class-name: ${spring.datasource.driver-class-name}
+      schema: bobspetstore
 
   jpa:
-    database-platform: org.hibernate.dialect.PostgreSQLDialect
     hibernate:
       # Options: none, validate, update, create, create-drop
       ddl-auto: update
-    show-sql: true
+    show-sql: false
     properties:
       hibernate:
         '[format_sql]': true
+    open-in-view: false
 springdoc:
   # Path for the JSON OpenAPI specification (Default: /v3/api-docs)
   api-docs:
@@ -51,3 +52,4 @@ logging:
   level:
     root: info
     '[org.hibernate.orm.connections.pooling]': ERROR
+    '[org.hibernate.validator.internal.metadata.aggregated]': OFF
