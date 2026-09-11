@@ -1,0 +1,13 @@
+spring:
+  application:
+    name: config
+  profiles:
+    active: native
+  cloud:
+    config:
+      server:
+        git:
+
+server:
+  address: localhost
+  port: 8888

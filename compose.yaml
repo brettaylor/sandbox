@@ -1,7 +1,6 @@
 services: 
   petstore:
     image: petstore:latest
-    container_name: petstore
     hostname: petstore
     ports:
       - "8080:8080"  
@@ -9,11 +8,33 @@ services:
       - ./src/test/resources/application.yml:/workspace/application.yml
     networks:
       - local-tier
-      
+
+  broker:
+    image: apache/kafka:latest
+    ports:
+      - "9092:9092"
+    environment:
+      # Configure the node to act as both a broker and a controller (KRaft mode)
+      KAFKA_NODE_ID: 1
+      KAFKA_PROCESS_ROLES: broker,controller
+      KAFKA_CONTROLLER_QUORUM_VOTERS: 1@localhost:9093
+
+      # Define internal and external listeners
+      KAFKA_LISTENERS: PLAINTEXT://0.0.0.0:29092,CONTROLLER://0.0.0.0:9093,EXTERNAL://0.0.0.0:9092
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://broker:29092,EXTERNAL://localhost:9092
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,CONTROLLER:PLAINTEXT,EXTERNAL:PLAINTEXT
+      KAFKA_CONTROLLER_LISTENER_NAMES: CONTROLLER
+
+      # Required settings for single-node development
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+      KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 1
+      KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 1
+      KAFKA_LOG_DIRS: /tmp/kraft-combined-logs
+    networks:
+      - local-tier
   postgres:
     image: postgres:18
     hostname: postgres
-    container_name: postgres
     restart: unless-stopped
     environment:
       POSTGRES_USER: postgres
